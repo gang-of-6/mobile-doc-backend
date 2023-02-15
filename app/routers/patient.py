@@ -32,7 +32,7 @@ async def get_patient(patient_id: str):
         )
         validated_result = None
     return {
-        "status": "OK",
+        "success": True,
         "patient": validated_result,
     }
 
@@ -60,6 +60,6 @@ async def get_patient(patient_id: str, patient_details: PatientInput):
     )
 
     if update_result.modified_count == 1:
-        return {"status": "OK", "message": "patient details is updated"}
+        return {"success": True, "message": "patient details is updated"}
     else:
-        return {"status": False, "message": "patient details could not be updated"}
+        return {"success": False, "message": "patient details could not be updated"}
