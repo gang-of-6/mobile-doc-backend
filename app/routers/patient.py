@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
-from ..app_models.patient import Patient
+from ..app_models.patient import Patient, PatientInput
 import json
 from ..util import get_db
 
@@ -42,7 +42,7 @@ async def get_patient(patient_id: str):
     tags=["Patient"],
     summary="Update details of a patient given a valid patient ID",
 )
-async def get_patient(patient_id: str, patient_details: Patient):
+async def get_patient(patient_id: str, patient_details: PatientInput):
     print(f"update_patient endpoint called for patient_id='{patient_id}'")
     db = get_db()
     db_reult = db.patient.find_one({"patient_id": patient_id})
@@ -53,8 +53,10 @@ async def get_patient(patient_id: str, patient_details: Patient):
             status_code=404, detail=f"Patient id='{patient_id}' not found"
         )
 
+    encoded_patient_details = jsonable_encoder(patient_details)
+    encoded_patient_details["patient_id"] = patient_id
     update_result = db.patient.replace_one(
-        {"patient_id": patient_id}, jsonable_encoder(patient_details)
+        {"patient_id": patient_id}, encoded_patient_details
     )
 
     if update_result.modified_count == 1:
