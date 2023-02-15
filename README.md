@@ -24,7 +24,7 @@ Developed By
 
 1805032 - Mahdee Mushfique Kamal
 
-1805032 - Abu Humayed Azim Fahmid
+1805036 - Abu Humayed Azim Fahmid
 
 1805038 - Iftekhar E Mahbub Zeeon
 
