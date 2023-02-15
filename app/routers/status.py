@@ -9,6 +9,6 @@ router = APIRouter()
 )
 async def root():
     return {
-        "status": "OK",
+        "success": True,
         "message": "Welcome to Mobile Docs Backend. Go to /docs for documentation",
     }
