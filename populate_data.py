@@ -12,87 +12,276 @@ client = pymongo.MongoClient(
 db = client.get_database("main_db")
 
 
-class Medicine(BaseModel):
-    name: str
-    generic_name: str
-    precautions: Optional[list[str]]
+class CorrelatedSymptoms(BaseModel):
+    symptom_name: str
+    correlated_symptoms: list[str]
+    required_doctor_speciality: str
 
 
-med_list = [
+correlated_symptoms_list = [
     {
-        "name": "Rolac",
-        "generic_name": "ketorolac-tromethamine",
-        "precautions": ["kidney_problem"],
+        "symptom_name": "cough",
+        "correlated_symptoms": [
+            "fever",
+            "sore throat",
+            "fatigue",
+            "shortness of breath",
+            "chest pain",
+        ],
+        "required_doctor_speciality": "Pulmonologist",
     },
     {
-        "name": "Brufen",
-        "generic_name": "Ibuprofen",
+        "symptom_name": "fever",
+        "correlated_symptoms": [
+            "cough",
+            "headache",
+            "nausea",
+            "chills",
+            "fatigue",
+            "muscle aches",
+        ],
+        "required_doctor_speciality": "Medicine",
     },
     {
-        "name": "Flagyl",
-        "generic_name": "Metronidazole",
-        "precautions": ["liver_problem"],
+        "symptom_name": "headache",
+        "correlated_symptoms": [
+            "fever",
+            "fatigue",
+            "dizziness",
+            "nausea",
+            "neck pain",
+            "photophobia",
+        ],
+        "required_doctor_speciality": "Neurologist",
     },
     {
-        "name": "Ciprofloxacin",
-        "generic_name": "Ciprofloxacin",
+        "symptom_name": "sore throat",
+        "correlated_symptoms": [
+            "cough",
+            "fever",
+            "swollen lymph nodes",
+            "headache",
+            "fatigue",
+            "body aches",
+        ],
+        "required_doctor_speciality": "ENT",
     },
     {
-        "name": "Augmentin",
-        "generic_name": "Amoxicillin and Clavulanic acid",
+        "symptom_name": "fatigue",
+        "correlated_symptoms": [
+            "headache",
+            "nausea",
+            "muscle weakness",
+            "joint pain",
+            "fever",
+            "chills",
+            "dizziness",
+        ],
+        "required_doctor_speciality": "Medicine",
     },
     {
-        "name": "Vitamin C",
-        "generic_name": "Ascorbic acid",
-        "precautions": ["kidney_problem"],
+        "symptom_name": "nausea",
+        "correlated_symptoms": [
+            "vomiting",
+            "abdominal pain",
+            "headache",
+            "fatigue",
+            "diarrhea",
+            "dizziness",
+            "heartburn",
+        ],
+        "required_doctor_speciality": "Gastroenterologist",
     },
     {
-        "name": "Amlodipine",
-        "generic_name": "Amlodipine",
+        "symptom_name": "vomiting",
+        "correlated_symptoms": [
+            "nausea",
+            "abdominal pain",
+            "diarrhea",
+            "headache",
+            "fatigue",
+            "dehydration",
+            "fever",
+            "chills",
+        ],
+        "required_doctor_speciality": "Gastroenterologist",
     },
     {
-        "name": "Erythromycin",
-        "generic_name": "Erythromycin",
+        "symptom_name": "abdominal pain",
+        "correlated_symptoms": [
+            "vomiting",
+            "diarrhea",
+            "nausea",
+            "fever",
+            "chills",
+            "bloating",
+            "constipation",
+            "back pain",
+        ],
+        "required_doctor_speciality": "Gastroenterologist",
     },
     {
-        "name": "Spirulina",
-        "generic_name": "Spirulina",
+        "symptom_name": "diarrhea",
+        "correlated_symptoms": [
+            "abdominal pain",
+            "nausea",
+            "vomiting",
+            "fever",
+            "dehydration",
+            "fatigue",
+            "chills",
+            "headache",
+            "muscle cramps",
+        ],
+        "required_doctor_speciality": "Gastroenterologist",
     },
     {
-        "name": "Prothiaden",
-        "generic_name": "Dosulepin",
+        "symptom_name": "shortness of breath",
+        "correlated_symptoms": [
+            "chest pain",
+            "wheezing",
+            "cough",
+            "fatigue",
+            "dizziness",
+            "headache",
+            "anxiety",
+            "rapid heartbeat",
+        ],
+        "required_doctor_speciality": "Pulmonologist",
     },
     {
-        "name": "Atenolol",
-        "generic_name": "Atenolol",
+        "symptom_name": "chest pain",
+        "correlated_symptoms": [
+            "shortness of breath",
+            "arm pain",
+            "back pain",
+            "neck pain",
+            "jaw pain",
+            "nausea",
+            "sweating",
+            "anxiety",
+            "heart palpitations",
+        ],
+        "required_doctor_speciality": "Cardiologist",
     },
     {
-        "name": "Levocetirizine",
-        "generic_name": "Levocetirizine",
+        "symptom_name": "back pain",
+        "correlated_symptoms": [
+            "abdominal pain",
+            "leg pain",
+            "neck pain",
+            "shoulder pain",
+            "hip pain",
+            "chest pain",
+            "headache",
+            "fatigue",
+            "muscle weakness",
+            "numbness",
+        ],
+        "required_doctor_speciality": "Orthopedist",
     },
     {
-        "name": "Loratadine",
-        "generic_name": "Loratadine",
+        "symptom_name": "neck pain",
+        "correlated_symptoms": [
+            "headache",
+            "shoulder pain",
+            "back pain",
+            "arm pain",
+            "tingling",
+            "numbness",
+            "dizziness",
+            "fatigue",
+            "nausea",
+            "jaw pain",
+        ],
+        "required_doctor_speciality": "Orthopedist",
     },
     {
-        "name": "Napa",
-        "generic_name": "Paracetamol",
-        "precautions": ["liver_problem"],
+        "symptom_name": "shoulder pain",
+        "correlated_symptoms": [
+            "neck pain",
+            "back pain",
+            "arm pain",
+            "headache",
+            "chest pain",
+            "numbness",
+            "tingling",
+            "stiffness",
+            "fatigue",
+            "dizziness",
+        ],
+        "required_doctor_speciality": "Orthopedist",
     },
     {
-        "name": "Amoxicillin",
-        "generic_name": "Amoxicillin",
+        "symptom_name": "arm pain",
+        "correlated_symptoms": [
+            "shoulder pain",
+            "neck pain",
+            "back pain",
+            "chest pain",
+            "numbness",
+            "tingling",
+            "weakness",
+            "swelling",
+            "fatigue",
+            "dizziness",
+        ],
+        "required_doctor_speciality": "Orthopedist",
     },
     {
-        "name": "Rantac",
-        "generic_name": "Ranitidine",
-        "precautions": ["kidney_problem"],
+        "symptom_name": "leg pain",
+        "correlated_symptoms": [
+            "back pain",
+            "hip pain",
+            "knee pain",
+            "foot pain",
+            "swelling",
+            "numbness",
+            "tingling",
+            "weakness",
+            "fatigue",
+            "cramps",
+        ],
+        "required_doctor_speciality": "Orthopedist",
+    },
+    {
+        "symptom_name": "hip pain",
+        "correlated_symptoms": [
+            "back pain",
+            "leg pain",
+            "knee pain",
+            "groin pain",
+            "numbness",
+            "tingling",
+            "stiffness",
+            "fatigue",
+            "swelling",
+            "limping",
+        ],
+        "required_doctor_speciality": "Orthopedist",
+    },
+    {
+        "symptom_name": "knee pain",
+        "correlated_symptoms": [
+            "leg pain",
+            "hip pain",
+            "foot pain",
+            "swelling",
+            "stiffness",
+            "numbness",
+            "tingling",
+            "weakness",
+            "cracking",
+            "limping",
+        ],
+        "required_doctor_speciality": "Orthopedist",
     },
 ]
 
 
-for med in med_list:
-    med = Medicine.parse_obj(med)
-    med = jsonable_encoder(med)
-    db_result = db.medicine.insert_one(med)
-    print(db_result.inserted_id)
+for x in correlated_symptoms_list:
+    x = CorrelatedSymptoms.parse_obj(x)
+    x = jsonable_encoder(x)
+    # db_result = db.medicine.insert_one(x)
+    # print(db_result.inserted_id)
+    print(x)
