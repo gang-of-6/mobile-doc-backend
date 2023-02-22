@@ -16,7 +16,7 @@ async def get_medicines():
     print(f"get_medicines endpoint called")
     db = get_db()
 
-    db_reult = db.medicine.find(filter={}, projection={"_id": False})
-    med_list = [x for x in db_reult]
+    db_result = db.medicine.find(filter={}, projection={"_id": False})
+    med_list = [x for x in db_result]
 
     return {"success": True, "all_medicines": med_list}
