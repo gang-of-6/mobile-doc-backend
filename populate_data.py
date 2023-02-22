@@ -15,7 +15,7 @@ db = client.get_database("main_db")
 class CorrelatedSymptoms(BaseModel):
     symptom_name: str
     correlated_symptoms: list[str]
-    required_doctor_speciality: str
+    required_doctor_speciality: list[str]
 
 
 correlated_symptoms_list = [
@@ -28,7 +28,10 @@ correlated_symptoms_list = [
             "shortness of breath",
             "chest pain",
         ],
-        "required_doctor_speciality": "Pulmonologist",
+        "required_doctor_speciality": [
+            "Pulmonologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "fever",
@@ -40,7 +43,9 @@ correlated_symptoms_list = [
             "fatigue",
             "muscle aches",
         ],
-        "required_doctor_speciality": "Medicine",
+        "required_doctor_speciality": [
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "headache",
@@ -52,7 +57,10 @@ correlated_symptoms_list = [
             "neck pain",
             "photophobia",
         ],
-        "required_doctor_speciality": "Neurologist",
+        "required_doctor_speciality": [
+            "Neurologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "sore throat",
@@ -64,7 +72,10 @@ correlated_symptoms_list = [
             "fatigue",
             "body aches",
         ],
-        "required_doctor_speciality": "ENT",
+        "required_doctor_speciality": [
+            "ENT",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "fatigue",
@@ -77,7 +88,9 @@ correlated_symptoms_list = [
             "chills",
             "dizziness",
         ],
-        "required_doctor_speciality": "Medicine",
+        "required_doctor_speciality": [
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "nausea",
@@ -90,7 +103,10 @@ correlated_symptoms_list = [
             "dizziness",
             "heartburn",
         ],
-        "required_doctor_speciality": "Gastroenterologist",
+        "required_doctor_speciality": [
+            "Gastroenterologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "vomiting",
@@ -104,7 +120,10 @@ correlated_symptoms_list = [
             "fever",
             "chills",
         ],
-        "required_doctor_speciality": "Gastroenterologist",
+        "required_doctor_speciality": [
+            "Gastroenterologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "abdominal pain",
@@ -118,7 +137,10 @@ correlated_symptoms_list = [
             "constipation",
             "back pain",
         ],
-        "required_doctor_speciality": "Gastroenterologist",
+        "required_doctor_speciality": [
+            "Gastroenterologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "diarrhea",
@@ -133,7 +155,10 @@ correlated_symptoms_list = [
             "headache",
             "muscle cramps",
         ],
-        "required_doctor_speciality": "Gastroenterologist",
+        "required_doctor_speciality": [
+            "Gastroenterologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "shortness of breath",
@@ -147,7 +172,10 @@ correlated_symptoms_list = [
             "anxiety",
             "rapid heartbeat",
         ],
-        "required_doctor_speciality": "Pulmonologist",
+        "required_doctor_speciality": [
+            "Pulmonologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "chest pain",
@@ -162,7 +190,10 @@ correlated_symptoms_list = [
             "anxiety",
             "heart palpitations",
         ],
-        "required_doctor_speciality": "Cardiologist",
+        "required_doctor_speciality": [
+            "Cardiologist",
+            "Medicine",
+        ],
     },
     {
         "symptom_name": "back pain",
@@ -178,7 +209,9 @@ correlated_symptoms_list = [
             "muscle weakness",
             "numbness",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
     {
         "symptom_name": "neck pain",
@@ -194,7 +227,9 @@ correlated_symptoms_list = [
             "nausea",
             "jaw pain",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
     {
         "symptom_name": "shoulder pain",
@@ -210,7 +245,9 @@ correlated_symptoms_list = [
             "fatigue",
             "dizziness",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
     {
         "symptom_name": "arm pain",
@@ -226,7 +263,9 @@ correlated_symptoms_list = [
             "fatigue",
             "dizziness",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
     {
         "symptom_name": "leg pain",
@@ -242,7 +281,9 @@ correlated_symptoms_list = [
             "fatigue",
             "cramps",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
     {
         "symptom_name": "hip pain",
@@ -258,7 +299,9 @@ correlated_symptoms_list = [
             "swelling",
             "limping",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
     {
         "symptom_name": "knee pain",
@@ -274,7 +317,9 @@ correlated_symptoms_list = [
             "cracking",
             "limping",
         ],
-        "required_doctor_speciality": "Orthopedist",
+        "required_doctor_speciality": [
+            "Orthopedist",
+        ],
     },
 ]
 
@@ -282,6 +327,6 @@ correlated_symptoms_list = [
 for x in correlated_symptoms_list:
     x = CorrelatedSymptoms.parse_obj(x)
     x = jsonable_encoder(x)
-    # db_result = db.medicine.insert_one(x)
-    # print(db_result.inserted_id)
-    print(x)
+    db_result = db.symptoms.insert_one(x)
+    print(db_result.inserted_id)
+    # print(x)
