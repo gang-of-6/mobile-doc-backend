@@ -10,6 +10,8 @@ class GeneralInformation(BaseModel):
     diabetes: Optional[bool]
     smoking_history: Optional[bool]
     asthema: Optional[bool]
+    liver_problem: Optional[bool]
+    kidney_problem: Optional[bool]
 
     class Config:
         schema_extra = {
