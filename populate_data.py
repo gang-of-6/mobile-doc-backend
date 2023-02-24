@@ -12,87 +12,35 @@ client = pymongo.MongoClient(
 db = client.get_database("main_db")
 
 
-class Medicine(BaseModel):
+class Doctor(BaseModel):
+    doctor_id: str
     name: str
-    generic_name: str
-    precautions: Optional[list[str]]
+    designation: str
+    degrees: str  # list of degrees seperated by comma
+    speciality: str
 
 
-med_list = [
+doctor_list = [
     {
-        "name": "Rolac",
-        "generic_name": "ketorolac-tromethamine",
-        "precautions": ["kidney_problem"],
+        "doctor_id": "BD014",
+        "name": "Dr. Tanjil Ahmed",
+        "designation": "Assistant Professor",
+        "degrees": "MBBS, MD",
+        "speciality": "Pulmonologist",
     },
     {
-        "name": "Brufen",
-        "generic_name": "Ibuprofen",
-    },
-    {
-        "name": "Flagyl",
-        "generic_name": "Metronidazole",
-        "precautions": ["liver_problem"],
-    },
-    {
-        "name": "Ciprofloxacin",
-        "generic_name": "Ciprofloxacin",
-    },
-    {
-        "name": "Augmentin",
-        "generic_name": "Amoxicillin and Clavulanic acid",
-    },
-    {
-        "name": "Vitamin C",
-        "generic_name": "Ascorbic acid",
-        "precautions": ["kidney_problem"],
-    },
-    {
-        "name": "Amlodipine",
-        "generic_name": "Amlodipine",
-    },
-    {
-        "name": "Erythromycin",
-        "generic_name": "Erythromycin",
-    },
-    {
-        "name": "Spirulina",
-        "generic_name": "Spirulina",
-    },
-    {
-        "name": "Prothiaden",
-        "generic_name": "Dosulepin",
-    },
-    {
-        "name": "Atenolol",
-        "generic_name": "Atenolol",
-    },
-    {
-        "name": "Levocetirizine",
-        "generic_name": "Levocetirizine",
-    },
-    {
-        "name": "Loratadine",
-        "generic_name": "Loratadine",
-    },
-    {
-        "name": "Napa",
-        "generic_name": "Paracetamol",
-        "precautions": ["liver_problem"],
-    },
-    {
-        "name": "Amoxicillin",
-        "generic_name": "Amoxicillin",
-    },
-    {
-        "name": "Rantac",
-        "generic_name": "Ranitidine",
-        "precautions": ["kidney_problem"],
+        "doctor_id": "BD015",
+        "name": "Dr. Ayesha Khan",
+        "designation": "Consultant",
+        "degrees": "MBBS, FCPS",
+        "speciality": "Medicine",
     },
 ]
 
 
-for med in med_list:
-    med = Medicine.parse_obj(med)
-    med = jsonable_encoder(med)
-    db_result = db.medicine.insert_one(med)
+for x in doctor_list:
+    x = Doctor.parse_obj(x)
+    x = jsonable_encoder(x)
+    db_result = db.doctor.insert_one(x)
     print(db_result.inserted_id)
+    print(x)
