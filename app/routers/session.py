@@ -122,7 +122,16 @@ async def get_suggested_doctors(session_id: str):
             set(doc_speciality_list)
         )
 
+    required_doctor_specialities = list(required_doctor_specialities)
+
+    db_result = db.doctor.find(
+        {"speciality": {"$in": required_doctor_specialities}}, projection={"_id": 0}
+    )
+
+    suggested_doctors = [x for x in db_result]
+
     return {
         "success": True,
         "required_doctor_specialities": required_doctor_specialities,
+        "suggested_doctors": suggested_doctors,
     }
