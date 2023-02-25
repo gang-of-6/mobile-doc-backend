@@ -35,5 +35,5 @@ class Session(BaseModel):
     video_call_link: Optional[str]
     Diagonosis: Optional[str]
     advice: Optional[str]
-    symptom_list: Optional[List[SymptomEntry]]
-    suggested_test_list: Optional[list[str]]
+    symptom_list: Optional[List[SymptomEntry]] = []
+    suggested_test_list: Optional[list[str]] = []

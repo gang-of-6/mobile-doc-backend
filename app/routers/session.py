@@ -61,6 +61,11 @@ async def add_symptoms(session_id: str, symptom_entry: SymptomEntry):
             status_code=404, detail=f"session id='{session_id}' not found"
         )
 
+    symptom_dict_list = db_reult["symptom_list"]
+    total_symptom_list = [x["symptom_name"] for x in symptom_dict_list]
+    total_symptom_list.append(symptom_entry.symptom_name)
+
+    # update the db
     symptom_entry_json = jsonable_encoder(symptom_entry)
 
     db_update = db.session.update_one(
@@ -68,19 +73,29 @@ async def add_symptoms(session_id: str, symptom_entry: SymptomEntry):
     )
 
     # correlated-symptom list
-    correlated_symptoms = db.symptoms.find_one(
-        filter={"symptom_name": symptom_entry.symptom_name},
-        projection={"correlated_symptoms": 1, "_id": 0},
-    )["correlated_symptoms"]
+    correlated_symptoms_set = set()
+    for each_added_symptom in total_symptom_list:
+        each_correlated_symptoms = db.symptoms.find_one(
+            filter={"symptom_name": each_added_symptom},
+            projection={"correlated_symptoms": 1, "_id": 0},
+        )["correlated_symptoms"]
 
-    print(correlated_symptoms)
+        correlated_symptoms_set = correlated_symptoms_set.union(
+            set(each_correlated_symptoms)
+        )
+
+    correlated_symptoms_set = correlated_symptoms_set.difference(
+        set(total_symptom_list)
+    )
+
+    print(correlated_symptoms_set)
 
     if db_update.modified_count == 1:
         return {
             "success": True,
             "message": f"Successfully added symptoms to 'session_id'={session_id} ",
             "symptom_added": symptom_entry,
-            "correlated_symptoms": correlated_symptoms,
+            "correlated_symptoms": list(correlated_symptoms_set),
         }
     else:
         return {
