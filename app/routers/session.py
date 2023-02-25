@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
-from ..app_models.EHR import Session, SymptomEntry
+from ..app_models.EHR import Session, SymptomEntry, Prescription
 import uuid
 import json
 from ..util import get_db
@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get(
     "/session/new/{patient_id}",
-    tags=["Session"],
+    tags=["Session-Patient"],
     summary="Creates a new session between doctor and patient",
 )
 async def create_session(patient_id: str):
@@ -46,7 +46,7 @@ async def create_session(patient_id: str):
 
 @router.post(
     "/session/symptoms/{session_id}",
-    tags=["Session"],
+    tags=["Session-Patient"],
     summary="Add a new symptom to existing session",
 )
 async def add_symptoms(session_id: str, symptom_entry: SymptomEntry):
@@ -106,7 +106,7 @@ async def add_symptoms(session_id: str, symptom_entry: SymptomEntry):
 
 @router.get(
     "/session/suggested_doctors/{session_id}",
-    tags=["Session"],
+    tags=["Session-Patient"],
     summary="Suggests a list of doctors based on provided symptoms",
 )
 async def get_suggested_doctors(session_id: str):
@@ -150,3 +150,46 @@ async def get_suggested_doctors(session_id: str):
         "required_doctor_specialities": required_doctor_specialities,
         "suggested_doctors": suggested_doctors,
     }
+
+
+@router.put(
+    "/session/update_prescription/{session_id}",
+    tags=["Session-Doctor"],
+    summary="Updates prescription for a session. ",
+)
+async def update_prescription(session_id: str, input_prescription: Prescription):
+    print(f"update_prescription endpoint called for session_id='{session_id}'")
+    db = get_db()
+    db_reult = db.session.find_one(
+        filter={"session_id": session_id}, projection={"session_id": 1}
+    )
+
+    if db_reult == None:
+        print(f"session id='{session_id}' not found")
+        raise HTTPException(
+            status_code=404, detail=f"session id='{session_id}' not found"
+        )
+
+    diagonosis = input_prescription.Diagonosis
+    advice = input_prescription.advice
+    suggested_test_list = input_prescription.suggested_test_list
+
+    # print(suggested_test_list, diagonosis)
+
+    db_update = db.session.update_one(
+        {"session_id": session_id},
+        {
+            "$set": {
+                "diagonosis": diagonosis,
+                "advice": advice,
+                "suggested_test_list": suggested_test_list,
+            }
+        },
+    )
+
+    if db_update.modified_count == 1:
+        return {
+            "success": True,
+            "message": f"Prescription was updated for session_id='{session_id}'",
+            "updated_prescription": input_prescription,
+        }

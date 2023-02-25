@@ -37,3 +37,18 @@ class Session(BaseModel):
     advice: Optional[str]
     symptom_list: Optional[List[SymptomEntry]] = []
     suggested_test_list: Optional[list[str]] = []
+
+
+class Prescription(BaseModel):
+    Diagonosis: str
+    advice: str
+    suggested_test_list: list[str]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "Diagonosis": "Seasonal Viral Fever",
+                "advice": "Take rest for 2 days.",
+                "suggested_test_list": ["CBC test", "Chest X-ray"],
+            }
+        }
