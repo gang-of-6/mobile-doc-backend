@@ -1,15 +1,16 @@
 import pymongo
+import os
 
 
-# atlas_password = os.getenv("atlas_password")
+atlas_password = os.getenv("_ATLAS_PASSWORD")
+atlas_username = os.getenv("_ATLAS_USERNAME")
 
 client = pymongo.MongoClient(
-    "mongodb+srv://user:1234@cluster0.ds5ggbq.mongodb.net/?retryWrites=true&w=majority"
+    f"mongodb+srv://{atlas_username}:{atlas_password}@cluster0.ds5ggbq.mongodb.net/?retryWrites=true&w=majority"
 )
 
 db = client.get_database("main_db")
 
 
 def get_db():
-    # db = client.get_database("main_db")
     return db
