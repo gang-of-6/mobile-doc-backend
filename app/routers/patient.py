@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 from ..app_models.patient import Patient, PatientInput
+from ..app_models.EHR import TestResult
 import json
 from ..util import get_db
 
@@ -63,3 +64,34 @@ async def get_patient(patient_id: str, patient_details: PatientInput):
         return {"success": True, "message": "patient details is updated"}
     else:
         return {"success": False, "message": "patient details could not be updated"}
+
+
+@router.get(
+    "/patient/EHR/{patient_id}",
+    tags=["Patient"],
+    summary="Returns the EHR of a patient given a valid patient ID",
+)
+async def get_EHR(patient_id: str):
+    print(f"get_EHR endpoint called for patient_id='{patient_id}'")
+    db = get_db()
+
+    db_reult = db.patient.find_one({"patient_id": patient_id})
+
+    if db_reult == None:
+        print(f"Patient id='{patient_id}' not found")
+        raise HTTPException(
+            status_code=404, detail=f"Patient id='{patient_id}' not found"
+        )
+
+    patient_details = Patient.parse_raw(json.dumps(db_reult, default=str))
+
+    db_reult = db.test_result.find({"patient_id": patient_id})
+
+    test_results = [TestResult.parse_raw(json.dumps(x, default=str)) for x in db_reult]
+    print(test_results)
+
+    return {
+        "success": True,
+        "patient_details": patient_details,
+        "test_results": test_results,
+    }

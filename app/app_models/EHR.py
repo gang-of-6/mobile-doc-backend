@@ -43,6 +43,7 @@ class Prescription(BaseModel):
     Diagonosis: str
     advice: str
     suggested_test_list: list[str]
+    suggested_medicine_list: list[str]
 
     class Config:
         schema_extra = {
@@ -50,5 +51,25 @@ class Prescription(BaseModel):
                 "Diagonosis": "Seasonal Viral Fever",
                 "advice": "Take rest for 2 days.",
                 "suggested_test_list": ["CBC test", "Chest X-ray"],
+                "suggested_medicine_list": ["Napa", "Seclo"],
             }
         }
+
+
+class TestDataEntry(BaseModel):
+    data_element: str
+    data_value: float
+    data_unit: str
+
+
+class TestFileEntry(BaseModel):
+    file_name: str
+    file_url: str
+
+
+class TestResult(BaseModel):
+    test_result_id: str
+    test_name: str
+    date: datetime
+    numeric_results: Optional[list[TestDataEntry]]
+    test_files: Optional[list[TestFileEntry]]
