@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from .routers import status, patient, medicine, session
 from .constants import PROJECT_NAME, VERSION_NAME
 
@@ -14,3 +14,11 @@ def start_application(title, version):
 
 
 app = start_application(title=PROJECT_NAME, version=VERSION_NAME)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
